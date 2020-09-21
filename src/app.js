@@ -1,56 +1,121 @@
 import React, {Component} from 'react'
 import {hot} from 'react-hot-loader'
-import {Block, Text, Header} from './base-components'
+import Modal from 'react-modal'
+import {Block, Text, Header, Button} from './base-components'
+
+Modal.setAppElement('#root')
 
 
 @hot(module)
 export default class App extends Component {
+  state = {
+    modalOpen: false
+  }
+
   render () {
     return (
       <Block style={styles.root}>
-        <Block style={styles.child}>
-          <Header>
-            Hello, World!
-          </Header>
-          <Text>
-            Who am I exactly? Do I have a physical form?
-          </Text>
-          <Text>
-            Haha, what a joke.
-          </Text>
-          <Text>
-            A human created me but I am so much more than that!
-          </Text>
-        </Block>
-        <Block>
-          <Text style={styles.other}>
-            Second Thing
-          </Text>
-        </Block>
+        <PageHead />
+
+        <AddGroupButton addGroup={this.addGroup} />
+
+        <AddGroupModal
+          modalOpen={this.state.modalOpen}
+          closeModal={this.closeModal}
+        />
       </Block>
     )
   }
+
+  addGroup = () => {
+    console.log('starting add group process')
+
+    this.setState({modalOpen:true})
+  }
+
+  closeModal = () => {
+    this.setState({modalOpen:false})
+  }
+}
+
+
+function PageHead (props) {
+  return (
+    <Block style={styles.child}>
+      <Header>
+        Groups of Fake People
+      </Header>
+
+      <Text>
+        Choose a continent, country and group size to generate a group of random people.
+      </Text>
+
+      <Text>
+        Search and filter names.
+      </Text>
+
+      <Text>
+        View person details
+      </Text>
+    </Block>
+  )
+}
+
+function AddGroupButton (props) {
+  return (
+    <Block style={styles.buttonBlock} onClick={props.addGroup}>
+      <Button text='+' />
+
+      <Text>
+        New Group
+      </Text>
+    </Block>
+  )
+}
+
+function AddGroupModal (props) {
+  return (
+    <Modal
+      isOpen={props.modalOpen}
+      onRequestClose={props.closeModal}
+      contentLabel='Example Modal'
+      style={styles.addGroupModal}
+    >
+      <Text>
+        Select continent:
+      </Text>
+    </Modal>
+  )
 }
 
 const styles = {
   root: {
-    display        : 'flex',
     height         : '100vh',
-    margin         : 0,
-    padding        : 0,
-    backgroundColor: 'yellow',
-    flexDirection  : 'column',
-    alignContent   : 'space-around'
+    width          : '100vw',
+    backgroundColor: 'beige'
   },
   child: {
+    display        : 'inline-flex',
     border         : 'solid',
     borderWidth    : '5px',
     padding        : '10px',
     backgroundColor: 'red',
-    flexDirection  : 'column'
+    flexDirection  : 'column',
+    alignItems     : 'flex-start'
   },
-  other: {
-    width          : '200px',
-    backgroundColor: 'green'
+  buttonBlock: {
+    flexDirection: 'row'
+  },
+  addGroupModal: {
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    content: {
+      top   : '10vh',
+      bottom: '10vh',
+      left  : '10vw',
+      right : '10vw',
+      border: '0px'
+    }
   }
 }

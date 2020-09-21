@@ -1,0 +1,14 @@
+
+new group
+
+continent
+
+country
+
+size
+
+- click group
+
+list of people with search
+
+person details
