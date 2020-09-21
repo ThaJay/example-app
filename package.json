@@ -1,0 +1,55 @@
+{
+  "name": "example-app",
+  "version": "0.0.1",
+  "description": "This is an example React web app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "webpack-dev-server --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThaJay/example-app.git"
+  },
+  "keywords": [
+    "react",
+    "example",
+    "spa"
+  ],
+  "author": "Dirk-Jan Winnubst",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/ThaJay/example-app/issues"
+  },
+  "homepage": "https://github.com/ThaJay/example-app#readme",
+  "devDependencies": {
+    "@babel/cli": "~7.11.6",
+    "@babel/core": "~7.11.6",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/preset-env": "~7.11.5",
+    "@babel/preset-react": "~7.10.4",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "~8.1.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-standard": "^4.0.1",
+    "json-loader": "~0.5.7",
+    "normalize.css": "^8.0.1",
+    "webpack": "~4.44.2",
+    "webpack-cli": "~3.3.12",
+    "webpack-dev-server": "~3.11.0"
+  },
+  "dependencies": {
+    "eslint": "^7.9.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.21"
+  }
+}
