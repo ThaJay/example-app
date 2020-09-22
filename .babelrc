@@ -5,10 +5,11 @@
       {"legacy": true}
     ],
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-optional-chaining"
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-transform-runtime"
   ],
   "presets": [
-    "@babel/env",
+    ["@babel/env", {"useBuiltIns": "usage"}],
     "@babel/preset-react"
   ]
 }

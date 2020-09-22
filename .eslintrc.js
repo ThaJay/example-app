@@ -20,6 +20,7 @@ module.exports = {
     'react'
   ],
   globals: {
+    fetch         : true,
     React         : true,
     __DEV__       : true,
     WebSocket     : true,

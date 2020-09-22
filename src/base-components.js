@@ -1,11 +1,16 @@
 import React from 'react'
 
+// no extra rerender when there is no style prop
+function mergeStyles (componentStyle, propStyle) {
+  if (propStyle) return {...componentStyle, ...propStyle}
+  else return componentStyle
+}
 
 export function Block (props) {
   return (
     <div
       {...props}
-      style={{...styles.block, ...props.style}}
+      style={mergeStyles(styles.block, props.style)}
     />
   )
 }
@@ -14,7 +19,7 @@ export function Text (props) {
   return (
     <span
       {...props}
-      style={{...styles.text, ...props.style}}
+      style={mergeStyles(styles.text, props.style)}
     />
   )
 }
@@ -23,7 +28,7 @@ export function Header (props) {
   return (
     <Text
       {...props}
-      style={{...styles.header, ...props.style}}
+      style={mergeStyles(styles.header, props.style)}
     />
   )
 }
@@ -32,11 +37,35 @@ export function Button (props) {
   return (
     <Block
       {...props}
-      style={{...styles.button, ...props.style}}
+      style={mergeStyles(styles.button, props.style)}
     >
-      <Text style={{fontSize:36}}>
+      <Text style={styles.buttonText}>
         {props.text}
       </Text>
+    </Block>
+  )
+}
+
+export function Option (props) {
+  return (
+    <option {...props}>
+      {props.name}
+    </option>
+  )
+}
+
+export function Select (props) {
+  const {name, label, children, ...rest} = props
+
+  return (
+    <Block>
+      <label htmlFor={name}>
+        {label}
+      </label>
+
+      <select {...rest}>
+        {children}
+      </select>
     </Block>
   )
 }
@@ -55,7 +84,7 @@ const baseStyle =  {
 
 const styles = {
   block: {
-    ...baseStyle
+    ...baseStyle // happens on parse so no mutations that would cause a rerender
   },
   text: {
     ...baseStyle,
@@ -76,5 +105,8 @@ const styles = {
     paddingBottom  : 10,
     paddingLeft    : 20,
     paddingRight   : 20
+  },
+  buttonText: {
+    fontSize: 36
   }
 }
