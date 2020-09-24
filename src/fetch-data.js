@@ -1,4 +1,4 @@
-const countriesBaseUrl = 'https://parseapi.back4app.com/classes/'
+const apiBaseUrl = 'https://parseapi.back4app.com/classes/'
 const backForAppApplicationId = 'YFfiLj9lLRC2OiEWBsAJoCQEEn31e2wTLxZGqgrz'
 const backForAppApiKey = 'oNJzPsMn7xb9ODXfJT626wBXoQjkO5d7JLe3QXMT'
 const headers = {
@@ -7,15 +7,19 @@ const headers = {
 }
 
 function getUrl (classname, queryString) {
-  return `${countriesBaseUrl}${classname}${queryString}`
+  return `${apiBaseUrl}${classname}${queryString}`
 }
 
-async function getJsonData (classname, queryString) {
-  return await fetch(getUrl(classname, queryString), {headers}).then(response => response.json())
+async function getJsonData (url, init) {
+  return await fetch(url, init).then(response => response.json())
+}
+
+function getApiData (classname, queryString) {
+  return getJsonData(getUrl(classname, queryString), {headers})
 }
 
 export function getContinents () {
-  return getJsonData('Continentscountriescities_Continent', '?order=name&keys=name')
+  return getApiData('Continentscountriescities_Continent', '?order=name&keys=name')
 }
 
 export function getCountriesByContinent (continentId) {
@@ -27,5 +31,9 @@ export function getCountriesByContinent (continentId) {
     }
   }))
 
-  return getJsonData('Continentscountriescities_Country', `?order=name&keys=name&where=${where}`)
+  return getApiData('Continentscountriescities_Country', `?order=name&keys=name,code&where=${where}`)
+}
+
+export function getPostalCodesFromCountry (amount, countryCode) {
+  return getApiData(`Worldzipcode_${countryCode}`, `?limit=${amount}&order=postalCode&keys=postalCode,placeName`)
 }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {hot} from 'react-hot-loader'
 import Modal from 'react-modal'
-import {Block, Text, Header, AddButtonWithLabel} from './base-components'
+import {Block, Text, Header, AddButtonWithLabel, baseStyle} from './base-components'
 import {GenerateNewGroupForm} from './generate-new-group-form'
 
 Modal.setAppElement('#root')
@@ -9,32 +9,49 @@ Modal.setAppElement('#root')
 
 @hot(module)
 export default class App extends Component {
-  state = {modalOpen:false}
+  state = {
+    modalOpen: false,
+    groups   : {}
+  }
 
   render () {
     return (
       <Block style={styles.root}>
-        <PageHead />
+        <Block style={styles.child}>
+          <PageHead />
 
-        <AddButtonWithLabel
-          ButtonLabel='New Group'
-          onClick={this.addGroup}
-        />
+          <GroupList groups={this.state.groups} />
 
-        <AddGroupModal
-          modalOpen={this.state.modalOpen}
-          closeModal={this.closeModal}
-        />
+          <AddButtonWithLabel
+            ButtonLabel='New Group'
+            onClick={this.openAddGroupModal}
+          />
+
+          <AddGroupModal
+            modalOpen={this.state.modalOpen}
+            closeModal={this.closeAddGroupModal}
+            addGroup={this.addGroup}
+          />
+        </Block>
       </Block>
     )
   }
 
-  addGroup = () => {
+  openAddGroupModal = () => {
     this.setState({modalOpen:true})
   }
 
-  closeModal = () => {
+  closeAddGroupModal = () => {
     this.setState({modalOpen:false})
+  }
+
+  addGroup = (name, data) => {
+    this.setState({
+      groups: {
+        ...this.state.groups,
+        [name]: data
+      }
+    })
   }
 }
 
@@ -61,15 +78,55 @@ function PageHead (props) {
   )
 }
 
+function GroupList (props) {
+  return (
+    <Block style={styles.child}>
+      <Header>
+        Generated groups:
+      </Header>
+
+      <Block style={styles.groupList}>
+        {getListItems(props.groups)}
+      </Block>
+    </Block>
+  )
+}
+
+function getListItems (groups) {
+  if (Object.keys(groups).length) return [...groupListItems(groups)]
+  else return <ListItem text='No groups generated yet' />
+}
+
+function * groupListItems (groups) {
+  for (const i in groups) {
+    yield (
+      <ListItem
+        key={i}
+        text={i}
+      />
+    )
+  }
+}
+
+function ListItem (props) {
+  return (
+    <Block style={styles.listItem.block}>
+      <Text style={styles.listItem.text}>
+        {props.text}
+      </Text>
+    </Block>
+  )
+}
+
 function AddGroupModal (props) {
   return (
     <Modal
       isOpen={props.modalOpen}
       onRequestClose={props.closeModal}
       contentLabel='Example Modal'
-      style={styles.addGroupModal}
+      style={styles.modal}
     >
-      <GenerateNewGroupForm />
+      <GenerateNewGroupForm addGroup={props.addGroup} />
     </Modal>
   )
 }
@@ -82,27 +139,37 @@ const styles = {
     backgroundColor: 'beige'
   },
   child: {
-    display        : 'inline-flex',
-    border         : 'solid',
-    borderWidth    : '5px',
-    padding        : '10px',
-    backgroundColor: 'red',
-    flexDirection  : 'column',
-    alignItems     : 'flex-start'
+    display   : 'inline-flex',
+    padding   : '10px',
+    alignItems: 'flex-start'
   },
-  buttonBlock: {
-    flexDirection: 'row'
-  },
-  addGroupModal: {
+  modal: {
     overlay: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     content: {
-      top   : '10vh',
-      bottom: '10vh',
-      left  : '10vw',
-      right : '10vw',
-      border: '0px'
+      ...baseStyle,
+      justifyContent: 'start',
+      width         : 'auto',
+      top           : '10vh',
+      bottom        : '10vh',
+      left          : '10vw',
+      right         : '10vw',
+      border        : '0px'
+    }
+  },
+  groupList: {
+    borderTop: '1px solid black'
+  },
+  listItem: {
+    block: {
+      borderBottom: '1px solid black'
+    },
+    text: {
+      marginTop   : 5,
+      marginRight : 10,
+      marginBottom: 5,
+      marginLeft  : 10
     }
   }
 }

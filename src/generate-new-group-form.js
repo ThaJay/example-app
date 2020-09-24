@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Block, Select, Option, Loading, AddButtonWithLabel} from './base-components'
-import {getContinents, getCountriesByContinent} from './fetch-data'
+import {getContinents, getCountriesByContinent, getPostalCodesFromCountry} from './fetch-data'
 
 
 export class GenerateNewGroupForm extends Component {
@@ -13,7 +13,7 @@ export class GenerateNewGroupForm extends Component {
     countries       : [],
     selectedCoutry  : '',
 
-    groupSize: 0
+    groupSize: 20
   }
 
   componentDidMount () {
@@ -49,6 +49,7 @@ export class GenerateNewGroupForm extends Component {
 
         <GroupSize
           hidden={!this.countriesLoaded}
+          value={this.state.groupSize}
           onChange={this.setGroupSize}
         />
 
@@ -93,7 +94,18 @@ export class GenerateNewGroupForm extends Component {
   }
 
   generateGroup = () => {
-    console.log('time to generate a group')
+    const [name, code] = this.getCountryDetails(this.state.selectedCoutry)
+    getPostalCodesFromCountry(
+      this.state.groupSize, code
+    ).then(response => {
+      this.props.addGroup(name, response.results)
+    })
+  }
+
+  getCountryDetails (countryId) {
+    for (const country of this.state.countries) {
+      if (country.objectId === countryId) return [country.name, country.code]
+    }
   }
 }
 

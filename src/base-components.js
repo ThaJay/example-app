@@ -79,7 +79,7 @@ export function Select (props) {
   const {name, label, children, ...rest} = props
 
   return (
-    <Block>
+    <Block style={styles.selectBlock}>
       <label htmlFor={name}>
         {label}
       </label>
@@ -91,7 +91,7 @@ export function Select (props) {
   )
 }
 
-const baseStyle =  {
+export const baseStyle =  {
   display       : 'flex',
   flexDirection : 'column',
   flexGrow      : 0,
@@ -106,21 +106,24 @@ const baseStyle =  {
 const styles = {
   block: {
     ...baseStyle // happens on parse so no mutations that would cause a rerender
+    // border: '1px solid black'
   },
   text: {
     ...baseStyle,
-    // backgroundColor: 'lightgreen',
     padding: 5
   },
   header: {
     fontSize: 24,
     margin  : 10
   },
+  selectBlock: {
+    margin: 10
+  },
   button: {
     border         : 'solid',
     borderRadius   : 20,
-    borderColor    : 'blue',
-    backgroundColor: 'blue',
+    borderColor    : 'Maroon',
+    backgroundColor: 'Maroon',
     color          : 'white',
     paddingTop     : 10,
     paddingBottom  : 10,
@@ -129,5 +132,9 @@ const styles = {
   },
   buttonText: {
     fontSize: 36
+  },
+  buttonBlock: {
+    flexDirection: 'row',
+    margin       : 10
   }
 }
