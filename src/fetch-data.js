@@ -27,5 +27,5 @@ export function getCountriesByContinent (continentId) {
     }
   }))
 
-  return getJsonData('Continentscountriescities_Country', `order=name&keys=name&where=${where}`)
+  return getJsonData('Continentscountriescities_Country', `?order=name&keys=name&where=${where}`)
 }

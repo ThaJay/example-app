@@ -33,6 +33,14 @@ export function Header (props) {
   )
 }
 
+export function Loading (props) {
+  return (
+    <Text>
+      Loading {props.name}...
+    </Text>
+  )
+}
+
 export function Button (props) {
   return (
     <Block
@@ -44,6 +52,19 @@ export function Button (props) {
       </Text>
     </Block>
   )
+}
+
+export function AddButtonWithLabel (props) {
+  return (
+    <Block style={styles.buttonBlock} onClick={props.onClick}>
+      <Button text='+' />
+
+      <Text>
+        {props.ButtonLabel}
+      </Text>
+    </Block>
+  )
+
 }
 
 export function Option (props) {
