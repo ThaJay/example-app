@@ -10,8 +10,10 @@ Modal.setAppElement('#root')
 @hot(module)
 export default class App extends Component {
   state = {
-    modalOpen: false,
-    groups   : {}
+    addGroupModalOpen    : false,
+    sets                 : {},
+    selectedGroup        : '',
+    groupDetailsModalOpen: false
   }
 
   render () {
@@ -20,35 +22,57 @@ export default class App extends Component {
         <Block style={styles.child}>
           <PageHead />
 
-          <GroupList groups={this.state.groups} />
+          <GroupList
+            sets={this.state.sets}
+            onClick={this.openGroupDetails}
+          />
 
           <AddButtonWithLabel
-            ButtonLabel='New Group'
+            ButtonLabel='New Set'
             onClick={this.openAddGroupModal}
           />
 
           <AddGroupModal
-            modalOpen={this.state.modalOpen}
+            modalOpen={this.state.addGroupModalOpen}
             closeModal={this.closeAddGroupModal}
             addGroup={this.addGroup}
+          />
+
+          <GroupDetailsModal
+            modalOpen={this.state.groupDetailsModalOpen}
+            closeModal={this.closeGroupDetailsModal}
+            group={this.state.sets[this.state.selectedGroup]}
           />
         </Block>
       </Block>
     )
   }
 
+  openGroupDetails = name => {
+    this.setState({
+      groupDetailsModalOpen: true,
+      selectedGroup        : name
+    })
+  }
+
   openAddGroupModal = () => {
-    this.setState({modalOpen:true})
+    this.setState({addGroupModalOpen:true})
   }
 
   closeAddGroupModal = () => {
-    this.setState({modalOpen:false})
+    this.setState({addGroupModalOpen:false})
+  }
+
+  closeGroupDetailsModal = () => {
+    this.setState({groupDetailsModalOpen:false})
   }
 
   addGroup = (name, data) => {
+    this.closeAddGroupModal()
+
     this.setState({
-      groups: {
-        ...this.state.groups,
+      sets: {
+        ...this.state.sets,
         [name]: data
       }
     })
@@ -60,19 +84,11 @@ function PageHead (props) {
   return (
     <Block style={styles.child}>
       <Header>
-        Groups of Fake People
+        Sets of postal codes
       </Header>
 
       <Text>
-        Choose a continent, country and group size to generate a group of random people.
-      </Text>
-
-      <Text>
-        Search and filter names.
-      </Text>
-
-      <Text>
-        View person details
+        Choose a continent, country and set size to generate a set of postal codes.
       </Text>
     </Block>
   )
@@ -82,27 +98,28 @@ function GroupList (props) {
   return (
     <Block style={styles.child}>
       <Header>
-        Generated groups:
+        Generated sets:
       </Header>
 
       <Block style={styles.groupList}>
-        {getListItems(props.groups)}
+        {getListItems(props)}
       </Block>
     </Block>
   )
 }
 
-function getListItems (groups) {
-  if (Object.keys(groups).length) return [...groupListItems(groups)]
-  else return <ListItem text='No groups generated yet' />
+function getListItems (props) {
+  if (Object.keys(props.sets).length) return [...groupListItems(props)]
+  else return <ListItem text='No sets generated yet' />
 }
 
-function * groupListItems (groups) {
-  for (const i in groups) {
+function * groupListItems (props) {
+  for (const i in props.sets) {
     yield (
       <ListItem
         key={i}
         text={i}
+        onClick={() => props.onClick(i)}
       />
     )
   }
@@ -110,7 +127,10 @@ function * groupListItems (groups) {
 
 function ListItem (props) {
   return (
-    <Block style={styles.listItem.block}>
+    <Block
+      style={styles.listItem.block}
+      onClick={props.onClick}
+    >
       <Text style={styles.listItem.text}>
         {props.text}
       </Text>
@@ -123,7 +143,7 @@ function AddGroupModal (props) {
     <Modal
       isOpen={props.modalOpen}
       onRequestClose={props.closeModal}
-      contentLabel='Example Modal'
+      contentLabel='Add Group'
       style={styles.modal}
     >
       <GenerateNewGroupForm addGroup={props.addGroup} />
@@ -131,6 +151,27 @@ function AddGroupModal (props) {
   )
 }
 
+function GroupDetailsModal (props) {
+  const {modalOpen, closeModal, ...rest} = props
+  return (
+    <Modal
+      isOpen={props.modalOpen}
+      onRequestClose={props.closeModal}
+      contentLabel='Group Details'
+      style={styles.modal}
+    >
+      <GroupDetails {...rest} />
+    </Modal>
+  )
+}
+
+function GroupDetails (props) {
+  return (
+    <article>
+      {JSON.stringify(props, null, '\n')}
+    </article>
+  )
+}
 
 const styles = {
   root: {
@@ -163,7 +204,9 @@ const styles = {
   },
   listItem: {
     block: {
-      borderBottom: '1px solid black'
+      width          : '100%',
+      borderBottom   : '1px solid black',
+      backgroundColor: 'lightgrey'
     },
     text: {
       marginTop   : 5,
